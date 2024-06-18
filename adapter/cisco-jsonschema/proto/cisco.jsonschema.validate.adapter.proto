@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package cisco.jsonschema.validate;
+
+option go_package = "cisco.com/cwm/adapters/cisco/jsonschema/validate";
+
+import "google/protobuf/struct.proto";
+
+service Activities {
+
+    // CWM SDK NOTE: Activity functions are defined as RPCs here e.g.
+
+    /* JSON data validation method */
+    rpc Validate(Request) returns (Response);
+}
+
+// CWM SDK NOTE: Messages here e.g.
+
+/* Documentation for Request */
+message Request {
+    google.protobuf.Value json_input     = 1; // json input data to be validated
+    google.protobuf.Value json_schema     = 2; // json schema to be used for validation
+}
+
+/* Documentation for Response */
+message Response {
+    string output  = 1;  // json input data validation result
+}

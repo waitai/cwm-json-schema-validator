@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package cisco.jsonschema.common;
+
+option go_package = "cisco.com/cwm/adapters/cisco/jsonschema/common";
+
+enum ErrorCode {
+    DEFAULT = 0;
+    INIT    = 1;
+    FATAL   = 2;
+    TIMEOUT = 3;
+    PANIC   = 4;
+}
+
+message Config {
+    
+}
+

@@ -1,0 +1,473 @@
+{
+    "id": "JSON-Schema-Validation",
+    "name": "JSON-Schema-Validation",
+    "start": "begin",
+    "states": [
+      {
+        "data": {
+          "json_schema" : {
+            "$schema": "http://json-schema.org/draft-06/schema#",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "$ref": "#/definitions/vpncreate"
+                },
+                {
+                  "$ref": "#/definitions/vpnupdate"
+                },
+                {
+                  "$ref": "#/definitions/vpndelete"
+                }
+              ]
+            },
+            "definitions": {
+              "vpncreate": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "L3ENDPOINT-CREATE"
+                    ]
+                  },
+                  "operation-type": {
+                    "type": "string",
+                    "enum": [
+                      "Auto",
+                      "Manual"
+                    ]
+                  },
+                  "forceDryRun": {
+                    "type": "boolean"
+                  },
+                  "showManualTasks": {
+                    "type": "boolean"
+                  },
+                  "showErrors": {
+                    "type": "boolean"
+                  },
+                  "payload": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpncreatepayload"
+                    }
+                  }
+                },
+                "required": [
+                  "action",
+                  "forceDryRun",
+                  "operation-type",
+                  "payload",
+                  "showErrors",
+                  "showManualTasks"
+                ],
+                "title": "Welcome1Element"
+              },
+              "vpnupdate": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "L3ENDPOINT-UPDATE"
+                    ]
+                  },
+                  "operation-type": {
+                    "type": "string",
+                    "enum": [
+                      "Auto",
+                      "Manual"
+                    ]
+                  },
+                  "forceDryRun": {
+                    "type": "boolean"
+                  },
+                  "showManualTasks": {
+                    "type": "boolean"
+                  },
+                  "showErrors": {
+                    "type": "boolean"
+                  },
+                  "payload": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpnupdatepayload"
+                    }
+                  }
+                },
+                "required": [
+                  "action",
+                  "forceDryRun",
+                  "operation-type",
+                  "payload",
+                  "showErrors",
+                  "showManualTasks"
+                ],
+                "title": "Welcome1Element"
+              },
+              "vpndelete": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "L3ENDPOINT-DELETE"
+                    ]
+                  },
+                  "operation-type": {
+                    "type": "string",
+                    "enum": [
+                      "Auto",
+                      "Manual"
+                    ]
+                  },
+                  "forceDryRun": {
+                    "type": "boolean"
+                  },
+                  "showManualTasks": {
+                    "type": "boolean"
+                  },
+                  "showErrors": {
+                    "type": "boolean"
+                  },
+                  "payload": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpndeletepayload"
+                    }
+                  }
+                },
+                "required": [
+                  "action",
+                  "forceDryRun",
+                  "operation-type",
+                  "payload",
+                  "showErrors",
+                  "showManualTasks"
+                ],
+                "title": "Welcome1Element"
+              },
+              "vpncreatepayload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ENDPOINTS": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpncreateendpoints"
+                    }
+                  }
+                },
+                "required": [
+                  "ENDPOINTS"
+                ],
+                "title": "Payload"
+              },
+              "vpnupdatepayload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ENDPOINTS": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpnupdateendpoints"
+                    }
+                  }
+                },
+                "required": [
+                  "ENDPOINTS"
+                ],
+                "title": "Payload"
+              },
+              "vpndeletepayload": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "ENDPOINTS": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpndeleteendpoints"
+                    }
+                  }
+                },
+                "required": [
+                  "ENDPOINTS"
+                ],
+                "title": "Payload"
+              },
+              "vpncreateendpoints": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "route-distinguisher": {
+                    "type": "integer"
+                  },
+                  "endpoint": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpncreateendpoint"
+                    }
+                  }
+                },
+                "required": [
+                  "endpoint",
+                  "name"
+                ],
+                "title": "Endpoint"
+              },
+              "vpnupdateendpoints": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "route-distinguisher": {
+                    "type": "integer"
+                  },
+                  "endpoint": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpnupdateendpoint"
+                    }
+                  }
+                },
+                "required": [
+                  "endpoint",
+                  "name"
+                ],
+                "title": "Endpoint"
+              },
+              "vpndeleteendpoints": {
+                "type": "object",
+                "additionalProperties": true,
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "route-distinguisher": {
+                    "type": "integer"
+                  },
+                  "endpoint": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/definitions/vpndeleteendpoint"
+                    }
+                  }
+                },
+                "required": [
+                  "endpoint",
+                  "name"
+                ],
+                "title": "Endpoint"
+              },
+              "vpncreateendpoint": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "ce-device": {
+                    "type": "string"
+                  },
+                  "ce-interface": {
+                    "type": "string"
+                  },
+                  "ip-network": {
+                    "type": "string"
+                  },
+                  "bandwidth": {
+                    "type": "integer"
+                  },
+                  "as-number": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id",
+                  "ce-device",
+                  "ce-interface",
+                  "ip-network",
+                  "bandwidth",
+                  "as-number"
+                ],
+                "title": "EndpointElement"
+              },
+              "vpnupdateendpoint": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "ce-device": {
+                    "type": "string"
+                  },
+                  "ce-interface": {
+                    "type": "string"
+                  },
+                  "ip-network": {
+                    "type": "string"
+                  },
+                  "bandwidth": {
+                    "type": "integer"
+                  },
+                  "as-number": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+            "anyOf": [
+              {
+                "required": [
+                  "ip-network"
+                ]
+              },
+              {
+                "required": [
+                  "ce-interface"
+                ]
+              },{
+                "required": [
+                  "bandwidth"
+                ]
+              },{
+                "required": [
+                  "ce-device"
+                ]
+              }
+            ],
+                "title": "EndpointElement"
+              },
+              "vpndeleteendpoint": {
+                "type": "object",
+                "additionalProperties": false,
+            
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "ce-device": {
+                    "type": "string"
+                  },
+                  "ce-interface": {
+                    "type": "string"
+                  },
+                  "ip-network": {
+                    "type": "string"
+                  },
+                  "bandwidth": {
+                    "type": "integer"
+                  },
+                  "as-number": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "title": "EndpointElement"
+              }
+            }
+          }
+        },
+        "name": "begin",
+        "type": "inject",
+        "transition": "validate-input"
+      },
+      {
+        "name": "validate-input",
+        "type": "switch",
+        "dataConditions": [
+          {
+            "condition": "${ ((.json_input | type) != \"array\") }",
+            "transition": "validation-error"
+          }
+        ],
+        "defaultCondition": {
+          "transition": "validate-json-schema"
+        }
+      },
+      {
+        "name": "validate-json-schema",
+        "type": "operation",
+        "actions": [
+          {
+            "name": "validateJSONInput",
+            "retryRef": "Default",
+            "functionRef": {
+              "refName": "JSON.RpcValidate",
+              "arguments": {
+                "input": {
+                  "json_input": "${ .json_input }",
+                  "json_schema": "${ .json_schema }"
+                }
+              }
+            },
+            "actionDataFilter": {
+              "results": "${ . }",
+              "toStateData": "${ .schema_validation }"
+            }
+          }
+        ],
+        "transition": "end",
+        "stateDataFilter": {
+          "output": "${ .schema_validation | del(.json_schema) }"
+        }
+      },
+      {
+        "end": true,
+        "name": "validation-error",
+        "type": "operation",
+        "actions": [],
+        "stateDataFilter": {
+          "output": "${{\"activities\": [{\"activity\": \"JSON Schema Validation Request\", \"status\": \"failed\", \"message\": \"Invalid Workflow Data input\"}]}|del(.json_input)}"
+        }
+      },
+      {
+        "end": true,
+        "name": "end",
+        "type": "operation",
+        "actions": [],
+        "stateDataFilter": {
+            "output": "${ . }"
+        }
+      }
+    ],
+    "retries": [
+        {
+          "name": "Default",
+          "delay": "PT30S",
+          "multiplier": 2,
+          "maxAttempts": 4
+        },
+        {
+          "name": "Custom",
+          "delay": "PT10S",
+          "multiplier": 1,
+          "maxAttempts": 2
+        }
+      ],
+    "version": "1.0.0",
+    "functions": [
+        {
+          "name": "JSON.RpcValidate",
+          "metadata": {
+            "worker": "cisco.jsonschema.v1.0.0"
+          },
+          "operation": "cisco.jsonschema.v1.0.0.validate.Validate"
+        }
+      ],
+    "description": "Validate JSON input against JSON schema",
+    "specVersion": "0.9"
+  }
