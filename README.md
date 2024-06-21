@@ -1,3 +1,5 @@
+[![published](https://static.production.devnetcloud.com/codeexchange/assets/images/devnet-published.svg)](https://developer.cisco.com/codeexchange/github/repo/waitai/cwm-json-schema-validator)
+
 # cwm-json-schema-validator
 A CWM adapter written in Go for validating the JSON input data for a workflow against its JSON Schema.  It allows CWM workflows to perform data input validation prior to executing the workflow.
 
