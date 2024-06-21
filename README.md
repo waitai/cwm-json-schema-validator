@@ -9,14 +9,15 @@ A CWM adapter written in Go for validating the JSON input data for a workflow ag
 - [Implementation of the Validate RPC call in the CWM adapter](#implementation-of-the-validate-rpc-call-in-the-cwm-adapter)
 - [Building the CWM adapter](#building-the-cwm-adapter)
 - [Testing the CWM adapter](#testing-the-cwm-adapter)
+- [Used in practice](#used-in-practice)
 
 ## Introduction
 
 Crosswork Workflow Manager (CWM) enables customers to build their own automation workflows, with capabilities to integrate to existing Operations Support Systems (OSS) and Business Support Systems (BSS) within their environment. These integrations are achieved through the use of adapters.
 
-In addition to developing adapters using the CWM SDK for integraing with external software systems through their APIs, utility functions can also be developed using adapters to allow them to be invoked to perform data manipulations that can't be handled with JQ Expressions while executing the workflows.
+In addition to developing adapters using the CWM SDK for integraing with external software systems through their APIs, utility functions can also be developed using adapters to allow them to be invoked to perform data manipulations that can't be handled with jq Expressions while executing the workflows.
 
-One such function is to validate the JSON input data needed to execute a CWM workflow against its schema.  This prevents any unnecessary workflow code to be run if the workflow is being fed with invalid input data.
+One such utility function is to validate the JSON input data needed to execute a CWM workflow against its schema.  This prevents any unnecessary workflow code to be run if the workflow is being fed with invalid input data.
 
 ## Prerequisites
 - [**CWM** 1.1 installed using OVA](https://www.cisco.com/c/en/us/td/docs/net_mgmt/cisco_workflow/AdministratorGuide1-1/b_administrator-guide1/m_install-cwm-using-ova_1-1.html)
@@ -24,13 +25,15 @@ One such function is to validate the JSON input data needed to execute a CWM wor
 
 ## CWM SDK Tutorial
 
-You can find a presentation on [how to build a utlity function adapter for CWM](https://www.youtube.com/watch?v=_nvpyjtNbo8) during the Automation Developer Days in Stockholm on May 21st, 2024.
+You can find a presentation on [how to build a utlity function adapter for CWM](https://www.youtube.com/watch?v=_nvpyjtNbo8) during the Automation Developer Days in Stockholm on May 21st, 2024.  The presentation walked you with the steps for developing a utility function adapter using the CWM SDK from scratch.
+
+Working with a utility function adapter is typically much simpler than an adapter for interfacing with an external system as you don't usually have to deal with resources and secrets.
 
 ## Implementation of the Validate RPC call in the CWM adapter
 
-Source code for activities.go can be found [here](./adapter/cisco-jsonschema/go/validate/activities.go).  The open source library called [gojsonchema](https://github.com/xeipuuv/gojsonschema) was used to implement the Validate RPC call in the JSON Schema Validation adapter for CWM.
+Source code for activities.go can be found [here](./adapter/cisco-jsonschema/go/validate/activities.go).  The open source Go library called [gojsonchema](https://github.com/xeipuuv/gojsonschema) was used to implement the Validate RPC call in the JSON Schema Validation adapter for CWM.
 
-Since both the JSON input and the JSON schema in the Request message of the adapter are defined as JSON objects, the most appropriate loader to use is the NewGoLoader as shown in the following 2 lines of Go code:
+Since both the JSON input and the JSON schema in the Request message of the adapter are defined as JSON objects, the most appropriate loader from gojsonschema to use is the NewGoLoader as shown in the following 2 lines of Go code:
 
 ```
 schemaLoader := gojsonschema.NewGoLoader(req.GetJsonSchema())
@@ -41,7 +44,6 @@ To perform the validation, you will make the following call in the gojsonschema 
 ```
 result, err := gojsonschema.Validate(schemaLoader, documentLoader)
 ```
-
 
 Based on the return value of result, you can determine whether the validation is successful or not.  When it has failed validation, the errors are also contained in result.
 
@@ -93,16 +95,19 @@ out
 
 #### Adapter and Worker
 
-Open CWM in browser, in *Admin* tab, go to *Adapters*, upload the adapter file that was just created in the previous step folder by clicking *Add Adapter* and selecting it from its installed folder under out.
-Check *Create Worker* box to automatically create worker for installed adapter.
+Open CWM in browser, in *Admin* tab, go to *Adapters*, upload the adapter file that was just created in the previous step by clicking *Add Adapter* and selecting it from its installed folder under out.
+Check the *Create Worker* box to automatically create a worker for the installed adapter.
 
 <img src='images/screenshots/add-cwm-adapter.png'>
 
 ### Workflow Definition
-Workflows are defined using a standardized *Domain Specific Language* based on the [Serverless Workflow specification](https://github.com/serverlessworkflow/specification/blob/main/examples/README.md), enabling workflow designers to express complex business processes, dependencies, and decision logic in a unified and readable format.
+Workflows are defined using a standardized *Domain Specific Language* based on the [Serverless Workflow specification](https://github.com/serverlessworkflow/specification/blob/main/README.md), enabling workflow designers to express complex business processes, dependencies, and decision logic in a unified and readable format.
 
+### JSON Schema Validation Workflow
 
-### Run Workfow
+The [JSON Schema Validation workflow](./workflow/JSON-Schema-Validation.sw.json) starts with an inject state with a static JSON schema to be used for validating the JSON input data being passed to the workflow.  It then transitions to validating that the provided JSON input is an array.  Next, it makes a function call into the JSON Schema Validation adapter to validate the passed in JSON input data against the static JSON schema embedded in the workflow.
+
+### Run the Workfow
 
 Install the JSON Schema Validation workflow by navigating to the Workflows tab in CWM UI:
 
@@ -124,7 +129,7 @@ Click on the Run button, and provide the input JSON data from [here](./workflow/
 
 <img src='images/screenshots/run-job.png' width='200'>
 
-Once the wokflow execution job is started, you can go to job tab to see the results. 
+Once the wokflow execution job is started by clicking on "Run job", you can go to the Job tab to see the results. 
 
 #### Positive Result
 
@@ -141,3 +146,7 @@ By modifying the 1st operation-type field in the input JSON data from "Auto" to 
 you will will see the following result showing the validation error.
 
  <img src='images/screenshots/workflow-execution-negative-result.png'>
+
+ ## Used in practice
+
+ Your newly written workflows can now make use of this JSON Schema Validation adapter to determine whether to proceed with executing the rest of the workflow code or to abort upon the detection of input data validation errors.  This adapter can be useful until CWM comes with its own built-in JSON schema validator.
